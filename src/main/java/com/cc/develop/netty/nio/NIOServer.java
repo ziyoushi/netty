@@ -51,6 +51,9 @@ public class NIOServer {
                     //如果是OP_ACCEPT 有新的客户端连接
                     //给该客户端生成一个SocketChannel
                     SocketChannel socketChannel = serverSocketChannel.accept();
+                    System.out.println("客户端连接成功 生成一个socketChannel"+socketChannel.hashCode());
+                    //设置为非阻塞
+                    socketChannel.configureBlocking(false);
                     //将socketChannel 注册到selector 关注事件为 OP_READ 同时给该socketChannel关联一个buffer
                     socketChannel.register(selector,SelectionKey.OP_READ, ByteBuffer.allocate(1024));
                 }
