@@ -81,6 +81,9 @@ public class GroupChatClient {
                     }
 
                 }
+                //删除当前key防止重复操作
+                iterator.remove();
+
             }else {
                 //System.out.println("没有可读的通道");
             }
