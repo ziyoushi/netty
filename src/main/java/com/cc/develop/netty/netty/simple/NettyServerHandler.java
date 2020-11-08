@@ -46,7 +46,11 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
     }
 
-    //数据读取完毕
+    /**
+     * 数据读取完毕
+     * @param ctx
+     * @throws Exception
+     */
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
 
@@ -54,6 +58,17 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         //将数据写入到缓存 并刷新
         //对发送的数据进行编码
         ctx.writeAndFlush(Unpooled.copiedBuffer("hello,客户端",CharsetUtil.UTF_8));
+    }
 
+    /**
+     * 处理异常 一般是需要关闭通道
+     * @param ctx
+     * @param cause
+     * @throws Exception
+     */
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+
+        ctx.close();
     }
 }

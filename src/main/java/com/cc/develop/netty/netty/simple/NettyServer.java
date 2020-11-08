@@ -27,6 +27,8 @@ public class NettyServer {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
 
+        try {
+
         //创建服务器端启动对象 配置参数
         ServerBootstrap bootstrap = new ServerBootstrap();
         //可以链式编程 设置两个线程组
@@ -43,7 +45,7 @@ public class NettyServer {
                     //给pipeline设置处理器
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(null);
+                        ch.pipeline().addLast(new NettyServerHandler());
                     }
                 });
 
@@ -55,6 +57,11 @@ public class NettyServer {
         //对关闭通道进行监听
         channelFuture.channel().closeFuture().sync();
 
+        }finally {
+
+            bossGroup.shutdownGracefully();
+            workGroup.shutdownGracefully();
+        }
 
     }
 }
