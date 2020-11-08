@@ -58,7 +58,7 @@ public class NettyServer {
         channelFuture.channel().closeFuture().sync();
 
         }finally {
-
+            //优雅关闭
             bossGroup.shutdownGracefully();
             workGroup.shutdownGracefully();
         }
