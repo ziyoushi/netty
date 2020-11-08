@@ -33,7 +33,7 @@ public class NettyClient {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         //加入自己的处理器
-                        ch.pipeline().addLast(null);
+                        ch.pipeline().addLast(new NettyClientHandler());
                     }
                 });
 
@@ -43,7 +43,7 @@ public class NettyClient {
         // ChannelFuture涉及到netty的异步模型
         ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 6668).sync();
         //给关闭通道进行监听
-        channelFuture.channel().close().sync();
+        channelFuture.channel().closeFuture().sync();
 
         }finally {
             group.shutdownGracefully();
