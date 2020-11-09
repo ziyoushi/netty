@@ -6,6 +6,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.CharsetUtil;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * com.cc.develop.netty.netty.simple
  *
@@ -32,6 +34,23 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
+        //假如 这里我们有一个非常耗时的业务 -->异步执行 -->提交该channel对应的NioEventLoopGroup的taskQueue中
+
+        //解决方案1 用户程序自定义的普通任务
+        ctx.channel().eventLoop().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    TimeUnit.SECONDS.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                ctx.writeAndFlush(Unpooled.copiedBuffer("hello,客户端222",CharsetUtil.UTF_8));
+            }
+        });
+
+        System.out.println(" go on ......");
 
         System.out.println("server ctx=="+ctx);
         // 将msg转成byteBuf
